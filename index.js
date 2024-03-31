@@ -2,15 +2,28 @@ import express from "express";
 import   connectToMongoDB  from "./connect.js";
 import router from "./routes/url.js";
 import URL from "./models/url.js";
+import path from "path"
+import staticRoute from "./routes/staticrouter.js"
+
 
 const app = express();
 const PORT = 8001;
+
+//using view engine
+
 
 connectToMongoDB("mongodb://localhost:27017/short-url").then(() =>
   console.log("Mongodb connected")
 );
 
+
+
+app.set('view engine','ejs');
+app.set('views', path.resolve("./views"));
+
 app.use(express.json());
+app.use(express.urlencoded({extended:false}));
+app.use("/",staticRoute);
 
 app.use("/url", router);
 
@@ -28,7 +41,9 @@ app.get("/:shortId", async (req, res) => {
       },
     }
   );
-  res.redirect(entry.redirectURL);
+  res.redirect(entry?.redirectURL);
 });
+
+
 
 app.listen(PORT, () => console.log(`Server Started at PORT:${PORT}`));
