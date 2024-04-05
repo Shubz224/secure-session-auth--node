@@ -3,7 +3,7 @@ import   connectToMongoDB  from "./connect.js";
 import URL from "./models/url.js";
 import path from "path"
 import {restrictologinuseronly} from "./middlewares/auth.js"
-import jwt from "jsonwebtoken";
+
 //routes
 import staticRoute from "./routes/staticrouter.js";
 import router from "./routes/url.js";
