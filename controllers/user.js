@@ -1,5 +1,5 @@
    import User from "../models/user.js"
-
+  import { setUser } from "../services/auth.js";
 
    export  async function handleusersignup(req,res){
       const{name,email,password} = req.body;
@@ -20,6 +20,9 @@
          error:"Invalid email or Password",
 
         });
+
+        const token  = setUser(user);
+        res.cookie("uid",token);
         return res.redirect("/");
 
    }

@@ -2,13 +2,13 @@ import express from "express";
 import   connectToMongoDB  from "./connect.js";
 import URL from "./models/url.js";
 import path from "path"
+import {restrictologinuseronly} from "./middlewares/auth.js"
 
-import jwt from "jsonwebtoken";
 //routes
 import staticRoute from "./routes/staticrouter.js";
 import router from "./routes/url.js";
 import userRoute from "./routes/user.js"
-
+import cookieParser from "cookie-parser";
 const app = express();
 const PORT = 8001;
 
@@ -26,10 +26,12 @@ app.set('views', path.resolve("./views"));
 
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+
+
 app.use("/",staticRoute);
 app.use("/user",userRoute);
-app.use("/url", router);
-
+app.use("/url",restrictologinuseronly, router);
+app.use(cookieParser());
 app.get("/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
   const entry = await URL.findOneAndUpdate(
